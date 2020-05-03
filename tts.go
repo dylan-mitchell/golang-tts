@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/bmizerany/aws4"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/bmizerany/aws4"
 )
 
 const api = "https://polly.us-west-2.amazonaws.com"
@@ -80,6 +81,7 @@ type voice int
 type TTS struct {
 	accessKey string
 	secretKey string
+	api       string
 	request   request
 }
 
@@ -92,10 +94,11 @@ type request struct {
 	TextType     string
 }
 
-func New(accessKey string, secretKey string) *TTS {
+func New(accessKey, secretKey, api string) *TTS {
 	return &TTS{
 		accessKey: accessKey,
 		secretKey: secretKey,
+		api:       api,
 		request: request{
 			LanguageCode: "en-US",
 			OutputFormat: "mp3",
@@ -138,7 +141,7 @@ func (tts *TTS) Speech(text string) (data []byte, err error) {
 		return []byte{}, err
 	}
 
-	r, _ := http.NewRequest("POST", api+"/v1/speech", bytes.NewReader(b))
+	r, _ := http.NewRequest("POST", tts.api+"/v1/speech", bytes.NewReader(b))
 	r.Header.Set("Content-Type", "application/json")
 
 	client := aws4.Client{Keys: &aws4.Keys{
