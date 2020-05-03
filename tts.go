@@ -12,7 +12,7 @@ import (
 
 const api = "https://polly.us-west-2.amazonaws.com"
 const (
-	MP3 format = iota
+	MP3 Format = iota
 	OGG
 )
 
@@ -74,7 +74,7 @@ const (
 	Matthew   = "Matthew"
 )
 
-type format int
+type Format int
 type rate int
 type voice int
 
@@ -108,7 +108,7 @@ func New(accessKey, secretKey, api string) *TTS {
 			VoiceId:      "Brian"}}
 }
 
-func (tts *TTS) Format(format format) {
+func (tts *TTS) Format(format Format) {
 	switch format {
 	case MP3:
 		tts.request.OutputFormat = "mp3"
