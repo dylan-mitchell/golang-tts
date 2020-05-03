@@ -92,6 +92,7 @@ type request struct {
 	Text         string
 	VoiceId      string
 	TextType     string
+	Engine       string
 }
 
 func New(accessKey, secretKey, api string) *TTS {
@@ -105,6 +106,7 @@ func New(accessKey, secretKey, api string) *TTS {
 			SampleRate:   "22050",
 			Text:         "",
 			TextType:     "text",
+			Engine:       "standard",
 			VoiceId:      "Brian"}}
 }
 
@@ -119,6 +121,10 @@ func (tts *TTS) Format(format Format) {
 
 func (tts *TTS) SampleRate(rate rate) {
 	tts.request.SampleRate = fmt.Sprintf("%d", rate)
+}
+
+func (tts *TTS) Engine(engine string) {
+	tts.request.Engine = fmt.Sprintf("%s", engine)
 }
 
 func (tts *TTS) Voice(voice string) {
