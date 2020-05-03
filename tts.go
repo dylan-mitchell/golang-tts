@@ -141,7 +141,10 @@ func (tts *TTS) Speech(text string) (data []byte, err error) {
 		return []byte{}, err
 	}
 
-	r, _ := http.NewRequest("POST", tts.api+"/v1/speech", bytes.NewReader(b))
+	r, err := http.NewRequest("POST", tts.api+"/v1/speech", bytes.NewReader(b))
+	if err != nil {
+		return []byte{}, err
+	}
 	r.Header.Set("Content-Type", "application/json")
 
 	client := aws4.Client{Keys: &aws4.Keys{
@@ -153,12 +156,9 @@ func (tts *TTS) Speech(text string) (data []byte, err error) {
 		return []byte{}, err
 	}
 
-	defer func() {
-		err = res.Body.Close()
-	}()
+	defer res.Body.Close()
 
 	data, err = ioutil.ReadAll(res.Body)
-
 	if err != nil {
 		return []byte{}, err
 	} else if res.StatusCode != 200 {
